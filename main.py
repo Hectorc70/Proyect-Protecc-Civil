@@ -1,4 +1,9 @@
+from PyQt5.QtWidgets import QMessageBox
+
 from ui import *
+
+from formulario.formulario import Registro
+from config.configurar import ArchivoConfig
 
 
 
@@ -8,11 +13,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
 		self.setupUi(self)
 		self.ejecutar_proceso()
+		self.cargar_configuracion()
 
 	def ejecutar_proceso(self):
 		self.btn_enviar.clicked.connect(self.obtener_datos)
 
-	
+		self.btn_guardar.clicked.connect(self.configuracion)
 
 	def obtener_datos(self):
 		"""Obtiene los datos del formulario"""
@@ -41,8 +47,51 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 				'afectacion':afectacion, 'desarrollo':desarrollo}
 
 
-		return datos 
+		registro = Registro('c\\pruebas', datos)
+		registro.crear_archivo()
 
+
+	def configuracion(self):
+		ruta = self.ruta_guardado_input.text()
+
+		if ruta == '':
+			self.mostrar_advertencia()
+
+		else:
+			config = ArchivoConfig()	
+			config.guardar_configuraciones(ruta)
+			QMessageBox.information(self, "Aviso", "Se guardo la Configuracion")
+
+
+	def cargar_configuracion(self):
+		ruta = self.ruta_guardado_input.text()
+
+		
+
+		
+		config = ArchivoConfig()
+		configuraciones = config.obtener_configuraciones()	
+
+		if  configuraciones != '':
+			self.ruta_guardado_input.setText(configuraciones)
+			print(self.ruta_guardado_input.text())
+		else:
+			self.tabWidget.setCurrentIndex(2)			
+
+			
+		  
+			
+			
+
+
+	def  mostrar_advertencia (self):
+		"""Muestra advertencias"""
+		QMessageBox.critical(self, "Advertencia", "Debe indicar una ruta para el guardado de los datos" )
+		 
+
+
+
+	
 if __name__ == "__main__":
 	app = QtWidgets.QApplication([])
 	window = MainWindow()
