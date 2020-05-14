@@ -23,6 +23,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def obtener_datos(self):
 		"""Obtiene los datos del formulario"""
 
+		ruta = self.ruta_guardado_input.text()
+
 		folio = self.folio_input.text()
 		turno = self.turno_input.text()
 		agente = self.agente_input.text()
@@ -46,12 +48,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 				'dependencias':dependencias, 'acciones':acciones,
 				'afectacion':afectacion, 'desarrollo':desarrollo}
 
-
-		registro = Registro('c\\pruebas', datos)
+		
+		registro = Registro(ruta, datos)
 		registro.crear_archivo()
 
 
 	def configuracion(self):
+		"""Guarda la configuracion cuando se escibe la ruta en el
+			campo y se presiona el boton de guardar"""
+
+			
 		ruta = self.ruta_guardado_input.text()
 
 		if ruta == '':
@@ -64,6 +70,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 	def cargar_configuracion(self):
+		"""Carga la configuracion que esta guardada en el
+		archivo config.txt ubicado en la raiz"""
+
 		ruta = self.ruta_guardado_input.text()
 
 		

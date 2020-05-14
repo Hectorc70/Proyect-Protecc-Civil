@@ -16,6 +16,7 @@ class ArchivoConfig:
     def obtener_configuraciones(self):
         configuraciones = self.txt.leer()
 
+
         if len(configuraciones) == 0:
             return ''
         else:
@@ -29,12 +30,11 @@ class ArchivoConfig:
         if exists(self.ruta):            
             eliminar(self.ruta)
             self.txt.crear()
-            self.txt.modificar(ruta_datos)
-
+            self.txt.modificar(ruta_datos, False)
         else:          
 
             self.txt.crear()
-            self.txt.modificar(ruta_datos)
+            self.txt.modificar(ruta_datos, False)
 
         
 

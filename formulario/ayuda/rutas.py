@@ -98,4 +98,3 @@ def abrir_directorio():
 
     return ruta
    
-    

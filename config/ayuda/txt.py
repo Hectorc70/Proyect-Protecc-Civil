@@ -17,10 +17,14 @@ class ArchivoTxt:
 			self.crear()
 		
 
-	def modificar(self, datos):
+	def modificar(self, datos, salto_linea=True):
 		
 		archivo_r = open(self.ruta_archivo, "a")
-		archivo_r.write(datos + '\n'  )
+
+		if salto_linea:
+			archivo_r.write(datos + '\n')
+		else:
+			archivo_r.write(datos)
 		
 		archivo_r.close() 
 		
