@@ -4,6 +4,7 @@ from ui import *
 
 from formulario.formulario import Registro
 from config.configurar import ArchivoConfig
+from info_obtencion.obtencion import TarjetaInformativa
 
 
 
@@ -19,6 +20,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.btn_enviar.clicked.connect(self.obtener_datos)
 
 		self.btn_guardar.clicked.connect(self.configuracion)
+
+	def tarjeta_informativa(self):
+		datos_ruta = self.ruta_guardado_input.text()
+		tar_info = TarjetaInformativa(nombre_registro,datos_ruta)
 
 	def obtener_datos(self):
 		"""Obtiene los datos del formulario"""
