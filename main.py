@@ -4,7 +4,8 @@ from ui import *
 
 from formulario.formulario import Registro
 from config.configurar import ArchivoConfig
-from info_obtencion.obtencion import TarjetaInformativa
+from info_obtencion.obtencion import ArchivoObtenido
+
 
 
 
@@ -15,15 +16,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.setupUi(self)
 		self.ejecutar_proceso()
 		self.cargar_configuracion()
+		
 
 	def ejecutar_proceso(self):
 		self.btn_enviar.clicked.connect(self.obtener_datos)
-
 		self.btn_guardar.clicked.connect(self.configuracion)
+		self.btn_buscar_datos.clicked.connect(self.mostrando_datos)
 
-	def tarjeta_informativa(self):
-		datos_ruta = self.ruta_guardado_input.text()
-		tar_info = TarjetaInformativa(nombre_registro,datos_ruta)
 
 	def obtener_datos(self):
 		"""Obtiene los datos del formulario"""
@@ -92,15 +91,49 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		else:
 			self.tabWidget.setCurrentIndex(2)			
 
+	def mostrando_datos(self):		
+		anno = self.b_fecha_anno_input.text()
+		mes = self.b_fecha_mes_input.text()
+		dia = self.b_fecha_dia_input.text()
+
+		fecha = dia +'_'+ mes +'_'+ anno
+		folio = self.b_folio_input.text()
+		ruta_datos = self.ruta_guardado_input.text()
+
+		self.plainTextEdit.isReadOnly()
+		
+		if (folio != '' and anno!= ''):	
+			archivo = ArchivoObtenido(folio, fecha, ruta_datos)
+			registros = archivo.obtener_archivos()
+			if len(registros) == 0:
+				self.mostrar_advertencia(texto='No se encontraron Registros')
+			
+			else:
+				self.plainTextEdit.setPlainText('FOLIO' +'	' + 'FECHA' +'	' + 'HORA')
+				for registro in registros:
+
+					folio = registro[0]
+					fecha_creacion = registro[1]
+					hora = registro[2]
+
+					dato = folio + '	' + fecha_creacion + '	' + hora 
+
+					
+					self.plainTextEdit.appendPlainText(str(dato))
+			
+		else:
+			self.mostrar_advertencia(texto='es obligatorio llenar año y folio')
 			
 		  
 			
 			
 
 
-	def  mostrar_advertencia (self):
+	def  mostrar_advertencia (self, titulo = 'Advertencia',
+							  texto = 'Debe indicar una ruta para el guardado de los datos'):
 		"""Muestra advertencias"""
-		QMessageBox.critical(self, "Advertencia", "Debe indicar una ruta para el guardado de los datos" )
+		QMessageBox.warning(self, titulo, texto)
+		
 		 
 
 
