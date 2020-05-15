@@ -5,6 +5,7 @@ from ui import *
 from formulario.formulario import Registro
 from config.configurar import ArchivoConfig
 from info_obtencion.obtencion import ArchivoObtenido
+from info_obtencion.obtencion import TarjetaInformativa
 
 
 
@@ -120,12 +121,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 					
 					self.plainTextEdit.appendPlainText(str(dato))
-			
+
+				self.btn_exportar.clicked.connect(self.exportar_datos(registros))
 		else:
 			self.mostrar_advertencia(texto='es obligatorio llenar año y folio')
 			
-		  
+	def exportar_datos(self, nombre_archivo):
+		ruta = self.ruta_xls.text()
+		extencion = self.ruta_xlsx_ext.text()
+		for registro in nombre_archivo:
+			archivo = registro[-1]
+
 			
+
+		TarjetaInformativa(archivo, ruta_datos)
 			
 
 

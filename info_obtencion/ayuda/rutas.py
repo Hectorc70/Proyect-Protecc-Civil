@@ -14,7 +14,7 @@ class Rutas():
         """split=False retorna la ruta completa de lo contrario
             la retorna dividida por directorio"""   
 
-            
+
         rutas = list()        
        
         if split:
@@ -96,6 +96,8 @@ def abrir_archivo():
     ruta = askopenfilename() 
 
     return ruta
+
+
 
 def abrir_directorio():
     ruta = askdirectory()
