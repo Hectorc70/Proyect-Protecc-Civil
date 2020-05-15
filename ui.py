@@ -41,7 +41,15 @@ class Ui_MainWindow(object):
         self.grupo1.setTitle("")
         self.grupo1.setObjectName("grupo1")
         self.folio_text = QtWidgets.QLabel(self.grupo1)
+        self.folio_text.setEnabled(True)
         self.folio_text.setGeometry(QtCore.QRect(10, 10, 41, 21))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.folio_text.sizePolicy().hasHeightForWidth())
+        self.folio_text.setSizePolicy(sizePolicy)
+        self.folio_text.setMinimumSize(QtCore.QSize(41, 21))
+        self.folio_text.setMaximumSize(QtCore.QSize(41, 21))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
@@ -365,7 +373,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
