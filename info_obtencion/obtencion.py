@@ -14,12 +14,12 @@ class TarjetaInformativa(ArchivoExcel):
         archivo de ejemplo"""   
     
 
-    def __init__(self, archivo, ruta_guardado, ruta_g_excel):
+    def __init__(self, archivo, ruta_datos, ruta_g_excel):
         self.ruta_excel = (getcwd()) + '\\'+'docs' + '\\'+'modelo_tarjeta_info.xlsx'
         ArchivoExcel.__init__(self, self.ruta_excel)        
         
         self.archivo = archivo
-        self.ruta_guardado = ruta_guardado
+        self.ruta_guardado = ruta_datos
         self.excel_g = ruta_g_excel
 
     def obtener_datos(self):
@@ -133,7 +133,7 @@ class ArchivoObtenido:
                 hora  = archivo[-1].split('_')[-1].split('.')[0]
                 
                 
-                registros[archivo[-1]] = [nombre, fecha, hora]
+                registros[archivo[-1]] = [nombre, fecha, hora, ruta_anno]
         
             else:
                 pass
@@ -141,5 +141,4 @@ class ArchivoObtenido:
         return registros
 
        
-        archivo = ArchivoTxt()
-       
+        

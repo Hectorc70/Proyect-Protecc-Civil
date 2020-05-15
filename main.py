@@ -18,11 +18,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.ejecutar_proceso()
 		self.cargar_configuracion()
 		
+		
 
 	def ejecutar_proceso(self):
 		self.btn_enviar.clicked.connect(self.obtener_datos)
 		self.btn_guardar.clicked.connect(self.configuracion)
-		self.btn_buscar_datos.clicked.connect(self.mostrando_datos)
+		self.btn_buscar_datos.clicked.connect(self.exportar_datos)
+		self.btn_expl_carp.clicked.connect(self.explorador_archivos)
 
 
 	def obtener_datos(self):
@@ -92,35 +94,41 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		else:
 			self.tabWidget.setCurrentIndex(2)			
 
-	def mostrando_datos(self):
 
-		def exportar_datos(nombre_archivo, ruta_guardado, ruta_excel):		
-			ruta_excel = self.ruta_xlsx_input.text()
-			
-			for registro in nombre_archivo:
-				archivo = registro[-1]
-
-			
-
-			TarjetaInformativa(nombre_archivo, ruta_guardado, ruta_excel)	
+	def exportar_datos(self):		
 		
-		#fileName = QFileDialog.getOpenFileName(self,)
+		registros = self.mostrando_datos()
+		carpeta_guardado_excel = self.directorio_g_input.text()	
 
+		for registro, dato in registros.items():
 
-		ruta_excel = self.ruta_xlsx_input.text()
+			nombre = dato[0]	
+			ruta_datos = dato[-1]			
+			ruta_excel = carpeta_guardado_excel + '/' + nombre + '.xlsx'
+
+			tarjeta = TarjetaInformativa(registro, ruta_datos, ruta_excel)	
+		
+			tarjeta.formatear_datos()
+
+	def mostrando_datos(self):
+		
+		
 		anno = self.b_fecha_anno_input.text()
 		mes = self.b_fecha_mes_input.text()
 		dia = self.b_fecha_dia_input.text()
+		ruta_guardar_en = self.directorio_g_input.text()
 
 		fecha = dia +'_'+ mes +'_'+ anno
 		folio = self.b_folio_input.text()
 		ruta_datos = self.ruta_guardado_input.text()
 
-		self.plainTextEdit.isReadOnly()
 		
-		if (folio != '' and anno!= '' and ruta_excel != ''):	
+		
+		if folio != '' and anno!= '' and ruta_guardar_en != '':	
+
 			archivo = ArchivoObtenido(folio, fecha, ruta_datos)
 			registros = archivo.obtener_archivos()
+
 			if len(registros) == 0:
 				self.mostrar_advertencia(texto='No se encontraron Registros')
 			
@@ -136,8 +144,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 					
 					self.plainTextEdit.appendPlainText(str(dato))
-
-					#exportar_datos(registro, ruta_datos, ruta_excel)
+				
+					
+		
+		
+			return registros
 
 			
 		else:
@@ -153,9 +164,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		QMessageBox.warning(self, titulo, texto)
 		
 		 
-
-
-
+	def explorador_archivos(self):
+		ruta_carpeta = QFileDialog.getExistingDirectory(self, 'Guardado de Tarjetas')
+		self.directorio_g_input.setText(ruta_carpeta)
+		return ruta_carpeta
+		
 	
 if __name__ == "__main__":
 	app = QtWidgets.QApplication([])
