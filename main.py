@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 from ui import *
 
@@ -92,7 +92,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		else:
 			self.tabWidget.setCurrentIndex(2)			
 
-	def mostrando_datos(self):		
+	def mostrando_datos(self):
+
+		def exportar_datos(nombre_archivo, ruta_guardado, ruta_excel):		
+			ruta_excel = self.ruta_xlsx_input.text()
+			
+			for registro in nombre_archivo:
+				archivo = registro[-1]
+
+			
+
+			TarjetaInformativa(nombre_archivo, ruta_guardado, ruta_excel)	
+		
+		#fileName = QFileDialog.getOpenFileName(self,)
+
+
+		ruta_excel = self.ruta_xlsx_input.text()
 		anno = self.b_fecha_anno_input.text()
 		mes = self.b_fecha_mes_input.text()
 		dia = self.b_fecha_dia_input.text()
@@ -103,7 +118,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 		self.plainTextEdit.isReadOnly()
 		
-		if (folio != '' and anno!= ''):	
+		if (folio != '' and anno!= '' and ruta_excel != ''):	
 			archivo = ArchivoObtenido(folio, fecha, ruta_datos)
 			registros = archivo.obtener_archivos()
 			if len(registros) == 0:
@@ -111,30 +126,24 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 			
 			else:
 				self.plainTextEdit.setPlainText('FOLIO' +'	' + 'FECHA' +'	' + 'HORA')
-				for registro in registros:
+				for registro, datos in registros.items():
 
-					folio = registro[0]
-					fecha_creacion = registro[1]
-					hora = registro[2]
+					folio 		   = datos[0]
+					fecha_creacion = datos[1]
+					hora 		   = datos[2]
 
 					dato = folio + '	' + fecha_creacion + '	' + hora 
 
 					
 					self.plainTextEdit.appendPlainText(str(dato))
 
-				self.btn_exportar.clicked.connect(self.exportar_datos(registros))
+					#exportar_datos(registro, ruta_datos, ruta_excel)
+
+			
 		else:
-			self.mostrar_advertencia(texto='es obligatorio llenar año y folio')
+			self.mostrar_advertencia(texto='es obligatorio llenar año, folio y la ruta de guardado')
 			
-	def exportar_datos(self, nombre_archivo):
-		ruta = self.ruta_xls.text()
-		extencion = self.ruta_xlsx_ext.text()
-		for registro in nombre_archivo:
-			archivo = registro[-1]
-
-			
-
-		TarjetaInformativa(archivo, ruta_datos)
+	
 			
 
 

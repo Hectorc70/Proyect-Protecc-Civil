@@ -1,11 +1,11 @@
 from os import getcwd
 
 
-from ayuda.excel import ArchivoExcel
-from ayuda.txt import ArchivoTxt
-from ayuda.rutas import Rutas
-from ayuda.rutas import dividir_cadena
-from ayuda.rutas import unir_cadenas
+from info_obtencion.ayuda.excel import ArchivoExcel
+from info_obtencion.ayuda.txt import ArchivoTxt
+from info_obtencion.ayuda.rutas import Rutas
+from info_obtencion.ayuda.rutas import dividir_cadena
+from info_obtencion.ayuda.rutas import unir_cadenas
 
 
 
@@ -92,8 +92,8 @@ class TarjetaInformativa(ArchivoExcel):
 
         self.guardar(self.excel_g)
 
-tarjeta = TarjetaInformativa('2321_14-05-2020_12-01.txt', 'C:\\pruebas\\2020', 'prueba.xlsx')
-tarjeta.formatear_datos()
+#tarjeta = TarjetaInformativa('2321_14-05-2020_12-01.txt', 'C:\\pruebas\\2020', 'prueba.xlsx')
+#tarjeta.formatear_datos()
 
 
 
@@ -118,7 +118,7 @@ class ArchivoObtenido:
 
 
     def obtener_archivos(self):
-        registros = list()
+        registros = dict()
 
         fecha_div = dividir_cadena('_', self.fecha)
         ruta_anno = self.ruta_datos +'\\' + fecha_div[-1]
@@ -132,8 +132,8 @@ class ArchivoObtenido:
                 fecha = archivo[-1].split('_')[1]
                 hora  = archivo[-1].split('_')[-1].split('.')[0]
                 
-                datos = [nombre, fecha, hora, datos, archivo]
-                registros.append(datos)
+                
+                registros[archivo[-1]] = [nombre, fecha, hora]
         
             else:
                 pass
