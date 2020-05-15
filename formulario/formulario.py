@@ -35,7 +35,10 @@ class Registro():
         datos_creacion = dict()
 
         for clave, dato in self.datos.items():
-            clave_dato = [clave,dato]
+
+            datos_sin_salto = dato.replace('\n', '')  #Quita los saltos de linea del texto
+            
+            clave_dato = [clave, datos_sin_salto]
             formato_dato = unir_cadenas(':', clave_dato)
 
             claves_y_datos.append(formato_dato)
