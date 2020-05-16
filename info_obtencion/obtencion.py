@@ -129,6 +129,9 @@ class ArchivoObtenido:
 
             elif clave == 'fecha':
                 registros = self.busqueda_por_fecha(dato) 
+
+            elif clave == 'folio-fecha':
+                registros = self.busqueda_por_folio_fecha(dato) 
         
         return registros
     def busqueda_por_folio(self, folio):
@@ -179,6 +182,30 @@ class ArchivoObtenido:
         return registros
 
 
+    def busqueda_por_folio_fecha(self, datos):
+        registros = dict()
+
+        folio = datos[0]
+        fecha = datos[1]
+
+        anno = fecha.split('-')[-1]
+        ruta_con_fecha = self.ruta_datos + '\\' + anno
+
+        ruta = Rutas()
+        archivos = ruta.recuperar_rutas(ruta_con_fecha, True)
+
+
+        for archivo in archivos:
+            fecha_archivo = archivo[-1].split('_')[1]
+            folio_archivo = archivo[-1].split('_')[0]
+
+            if fecha_archivo == fecha and folio_archivo == folio:
+
+                hora  = archivo[-1].split('_')[-1].split('.')[0]                
+                
+                registros[archivo[-1]] = [folio_archivo, fecha_archivo, hora]
+
+        return registros
 
         
     def obtener_archivos_individual(self):
