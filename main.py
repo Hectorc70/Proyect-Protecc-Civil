@@ -10,10 +10,14 @@ from info_obtencion.obtencion import TarjetaInformativa
 
 
 
+		
+
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def __init__(self, *args, **kwargs):   
 		QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
+		#self.ruta_datos = self.ruta_guardado_input.text()
+	
 		self.setupUi(self)
 		self.ejecutar_proceso()
 		self.cargar_configuracion()
@@ -21,11 +25,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		
 
 	def ejecutar_proceso(self):
-		self.btn_enviar.clicked.connect(self.obtener_datos)
-		self.btn_guardar.clicked.connect(self.configuracion)
-		self.btn_buscar_datos.clicked.connect(self.exportar_datos)
-		self.btn_expl_carp.clicked.connect(self.explorador_archivos)
+		
+		#self.btn_guardar.clicked.connect(self.configuracion)
+	
+		#self.btn_expl_carp.clicked.connect(self.explorador_archivos)
 
+		pass
 
 	def obtener_datos(self):
 		"""Obtiene los datos del formulario"""
@@ -110,49 +115,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		
 			tarjeta.formatear_datos()
 
-	def mostrando_datos(self):
-		
-		
-		anno = self.b_fecha_anno_input.text()
-		mes = self.b_fecha_mes_input.text()
-		dia = self.b_fecha_dia_input.text()
-		ruta_guardar_en = self.directorio_g_input.text()
-
-		fecha = dia +'_'+ mes +'_'+ anno
-		folio = self.b_folio_input.text()
-		ruta_datos = self.ruta_guardado_input.text()
-
-		
-		
-		if folio != '' and anno!= '' and ruta_guardar_en != '':	
-
-			archivo = ArchivoObtenido(folio, fecha, ruta_datos)
-			registros = archivo.obtener_archivos()
-
-			if len(registros) == 0:
-				self.mostrar_advertencia(texto='No se encontraron Registros')
+	
 			
-			else:
-				self.plainTextEdit.setPlainText('FOLIO' +'	' + 'FECHA' +'	' + 'HORA')
-				for registro, datos in registros.items():
-
-					folio 		   = datos[0]
-					fecha_creacion = datos[1]
-					hora 		   = datos[2]
-
-					dato = folio + '	' + fecha_creacion + '	' + hora 
-
-					
-					self.plainTextEdit.appendPlainText(str(dato))
-				
-					
-		
-		
-			return registros
-
-			
-		else:
-			self.mostrar_advertencia(texto='es obligatorio llenar año, folio y la ruta de guardado')
 			
 	
 			
@@ -164,14 +128,123 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		QMessageBox.warning(self, titulo, texto)
 		
 		 
-	def explorador_archivos(self):
+class WidgetsAyuda(MainWindow):
+
+	def __init__(self):
+		MainWindow.__init__(self)
+
+
+	
+
+	
+	def ventana_advertencia(self, titulo, texto ):
+		pass		
+		
+
+
+	
+class ExportarDatos(MainWindow):
+
+	def __init__(self):
+		MainWindow.__init__(self)
+		
+		self.btn_buscar_datos.clicked.connect(self.comprobar)
+		self.btn_directorio_excel.clicked.connect(self.explorador_de_archivos)
+		#self.widget = WidgetsAyuda()
+
+	
+	def exportar_datos(self):
+		pass
+		
+
+	def comprobar(self):
+
+		if self.rbtn_individual.isChecked():			
+			self.buscar_registro_individual()
+		else:
+			self.buscar_registro_por_rangos()
+
+
+		
+
+	def buscar_registro_individual(self):
+
+		
+		datos_para_busqueda = dict()
+
+		folio = self.b_folio_input.text()
+		dia = self.b_fecha_dia_input.text()		
+		mes = self.b_fecha_mes_input.text()
+		anno = self.b_fecha_anno_input.text()	
+		ruta_datos = self.ruta_guardado_input.text()
+
+		ruta_guardar_en = self.directorio_g_input.text()
+
+		fecha = dia + '-' + mes + '-' + anno
+
+		if ruta_guardar_en != '':
+			if folio != '' and fecha != '--':
+				datos_para_busqueda['folio-fecha'] = [folio, fecha]		
+				
+			elif folio != '':
+				datos_para_busqueda['folio'] = folio		
+				
+			elif fecha != '--':
+				if dia != '' and mes != '' and anno !='':
+					datos_para_busqueda['fecha'] = fecha
+				else:
+					QMessageBox.warning(self, 'Advertencia', 'Llene todos los campos de la fecha DD/MM/AAAA')
+				
+			
+			else:
+				QMessageBox.warning(self, 'Advertencia', 'Llene los campos Correspondientes')
+
+			
+			archivo = ArchivoObtenido(datos_para_busqueda, ruta_datos)
+			registros = archivo.comprobar_tipo_busqueda()
+			
+			self.mostrar_datos(registros)
+			return registros 
+
+		else:
+			QMessageBox.warning(self, 'Advertencia', 'Seleccione una ruta de Guardado para la informacion')
+		
+		
+	def mostrar_datos(self, datos):		
+				
+		if datos:
+			self.plainTextEdit.setPlainText('FOLIO' +'	' + 'FECHA' +'	' + 'HORA')
+
+			for dato in datos.values():
+
+				folio 		   = dato[0]
+				fecha_creacion = dato[1]
+				hora 		   = dato[2]
+
+				dato = folio + '	' + fecha_creacion + '	' + hora 
+
+						
+				self.plainTextEdit.appendPlainText(str(dato))
+
+		else:
+			QMessageBox.information(self, 'Aviso', 'No se encontraron registros, prueba con otro folio o fecha')	
+
+
+
+		
+	def buscar_registro_por_rangos(self):
+		pass
+
+
+	
+	
+	def explorador_de_archivos(self):
 		ruta_carpeta = QFileDialog.getExistingDirectory(self, 'Guardado de Tarjetas')
 		self.directorio_g_input.setText(ruta_carpeta)
+
 		return ruta_carpeta
-		
-	
 if __name__ == "__main__":
 	app = QtWidgets.QApplication([])
-	window = MainWindow()
+	window = ExportarDatos()
 	window.show()
 	app.exec_()

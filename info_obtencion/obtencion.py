@@ -109,15 +109,45 @@ class TarjetaInformativa(ArchivoExcel):
     
 class ArchivoObtenido:
 
-    def __init__(self, folio, fecha, ruta_datos):
+    def __init__(self, datos_de_busqueda, ruta_datos):
         
-        self.folio = folio
-        self.fecha = fecha
+        self.datos = datos_de_busqueda        
         self.ruta_datos = ruta_datos
         
 
+    def comprobar_tipo_busqueda(self):
+        registros = None
+        for clave, dato in self.datos.items():
+            if clave == 'folio':
+                registros = self.busqueda_por_folio(dato)
+                             
 
-    def obtener_archivos(self):
+            elif clave == 'fecha':
+                pass 
+        
+        return registros
+    def busqueda_por_folio(self, folio):
+        """devuelve todos los registros con el
+        folio que se solicito sin importar el año"""
+
+        registros = dict()
+
+
+        ruta = Rutas()
+        archivos = ruta.recuperar_rutas(self.ruta_datos, True)
+
+        for archivo in archivos:
+            folio_archivo = archivo[-1].split('_')[0]
+            if folio_archivo == folio:
+
+                fecha = archivo[-1].split('_')[1]
+                hora  = archivo[-1].split('_')[-1].split('.')[0]
+                
+                
+                registros[archivo[-1]] = [folio_archivo, fecha, hora]
+
+        return registros
+    def obtener_archivos_individual(self):
         registros = dict()
 
         fecha_div = dividir_cadena('_', self.fecha)
