@@ -116,6 +116,11 @@ class ArchivoObtenido:
         
 
     def comprobar_tipo_busqueda(self):
+        """comprueba que tipo de busqueda debe hacer
+            por numero de folio, por fecha de creacion 
+            por los dos  tambien si es de forma masiva o individual"""
+
+
         registros = None
         for clave, dato in self.datos.items():
             if clave == 'folio':
@@ -123,7 +128,7 @@ class ArchivoObtenido:
                              
 
             elif clave == 'fecha':
-                pass 
+                registros = self.busqueda_por_fecha(dato) 
         
         return registros
     def busqueda_por_folio(self, folio):
@@ -147,6 +152,35 @@ class ArchivoObtenido:
                 registros[archivo[-1]] = [folio_archivo, fecha, hora]
 
         return registros
+    
+    
+    def busqueda_por_fecha(self, fecha):
+        """Busca registros por fecha de creacion"""
+
+        registros = dict()
+        anno = fecha.split('-')[-1]
+        ruta_con_fecha = self.ruta_datos + '\\' + anno
+
+        ruta = Rutas()
+        archivos = ruta.recuperar_rutas(ruta_con_fecha, True)
+
+
+        for archivo in archivos:
+            fecha_archivo = archivo[-1].split('_')[1]
+
+            if fecha_archivo == fecha:
+                
+                folio = archivo[-1].split('_')[0]               
+                hora  = archivo[-1].split('_')[-1].split('.')[0]
+                
+                
+                registros[archivo[-1]] = [folio, fecha_archivo, hora]
+
+        return registros
+
+
+
+        
     def obtener_archivos_individual(self):
         registros = dict()
 

@@ -154,16 +154,23 @@ class ExportarDatos(MainWindow):
 
 	
 	def exportar_datos(self):
-		pass
+		"""invoca la clase para exportar los datos en una
+		   archivo excel """
+		registros_obtenidos = self.comprobar()
+
+
+
+
 		
 
 	def comprobar(self):
 
 		if self.rbtn_individual.isChecked():			
-			self.buscar_registro_individual()
+			registros_obtenidos = self.buscar_registro_individual()
 		else:
 			self.buscar_registro_por_rangos()
 
+		return registros_obtenidos
 
 		
 
@@ -227,7 +234,7 @@ class ExportarDatos(MainWindow):
 				self.plainTextEdit.appendPlainText(str(dato))
 
 		else:
-			QMessageBox.information(self, 'Aviso', 'No se encontraron registros, prueba con otro folio o fecha')	
+			QMessageBox.information(self, 'Aviso', 'No se encontraron registros, prueba con otro folio o fecha:DD/MM/AAAA')	
 
 
 
