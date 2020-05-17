@@ -153,13 +153,18 @@ class ExportarDatos(MainWindow):
 		#self.widget = WidgetsAyuda()
 
 	
-	def exportar_datos(self):
+	def exportar_datos(self, datos, ruta_datos, ruta_guardado_excel):
 		"""invoca la clase para exportar los datos en una
 		   archivo excel """
 
+		
+		for registro, datos in datos.items():
+			anno = datos[1].split('-')[-1]
+			tarjeta = TarjetaInformativa(registro, anno, ruta_datos, ruta_guardado_excel)
+			tarjeta.formatear_datos()
 
-		#registros_obtenidos = self.comprobar()
-		pass
+		QMessageBox.information(self, 'Aviso', 'Se han exportado todos los archivos en: '+ ruta_guardado_excel)
+		
 
 
 
@@ -205,7 +210,7 @@ class ExportarDatos(MainWindow):
 				datos_para_busqueda['folio'] = folio		
 				
 			
-			if dia != '' and mes != '' and anno !='':
+			elif dia != '' and mes != '' and anno !='':
 				datos_para_busqueda['fecha'] = fecha
 				
 				
@@ -220,6 +225,8 @@ class ExportarDatos(MainWindow):
 				archivo = ArchivoObtenido(datos_para_busqueda, ruta_datos)
 				registros = archivo.comprobar_tipo_busqueda()
 				self.mostrar_datos(registros)
+
+				self.exportar_datos(registros, ruta_datos, ruta_guardar_en)
 		
 				return registros 
 			
@@ -273,7 +280,8 @@ class ExportarDatos(MainWindow):
 			if datos_para_busqueda:
 				archivos  = ArchivoObtenido(datos_para_busqueda, ruta_datos)
 				registros = archivos.comprobar_tipo_busqueda()
-				
+				self.mostrar_datos(registros)
+				self.exportar_datos(registros, ruta_datos, ruta_guardar_en)
 				
 				return registros
 
@@ -282,7 +290,7 @@ class ExportarDatos(MainWindow):
 
 
 	def mostrar_datos(self, datos):		
-				
+		self.plainTextEdit.setPlainText('') 		
 		if datos:
 			self.plainTextEdit.setPlainText('FOLIO' +'	' + 'FECHA' +'	' + 'HORA')
 
@@ -310,6 +318,10 @@ class ExportarDatos(MainWindow):
 		self.directorio_g_input.setText(ruta_carpeta)
 
 		return ruta_carpeta
+
+	
+
+
 if __name__ == "__main__":
 	app = QtWidgets.QApplication([])
 	window = ExportarDatos()

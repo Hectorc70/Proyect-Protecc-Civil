@@ -1,5 +1,6 @@
 from os import getcwd
-import calendar
+
+from os.path import splitext
 
 
 from info_obtencion.ayuda.excel import ArchivoExcel
@@ -19,34 +20,15 @@ class TarjetaInformativa(ArchivoExcel):
         archivo de ejemplo"""   
     
 
-    def __init__(self, archivo, ruta_datos, ruta_g_excel):
+
+    def __init__(self, archivo, anno, ruta_datos, ruta_g_excel):
         self.ruta_excel = (getcwd()) + '\\'+'docs' + '\\'+'modelo_tarjeta_info.xlsx'
         ArchivoExcel.__init__(self, self.ruta_excel)        
         
         self.archivo = archivo
+        self.anno    = anno
         self.ruta_guardado = ruta_datos
         self.excel_g = ruta_g_excel
-
-    def obtener_datos(self):
-        datos_txt = dict()
-        ruta_archivo = self.ruta_guardado + '\\' + self.archivo
-        
-
-        archivo = ArchivoTxt(ruta_archivo)
-        contenido = archivo.leer()
-
-        contenido_div = dividir_cadena('|', contenido[0])
-
-        for dato in contenido_div:
-            clave = dato.split(':')[0]
-            info  = dato.split(':')[-1]
-             
-            datos_txt[clave] = info
-
-        return datos_txt
-
-
-
 
 
     def formatear_datos(self):
@@ -73,6 +55,31 @@ class TarjetaInformativa(ArchivoExcel):
 
         self.escribir_celdas(datos_registro, 0)
 
+    def obtener_datos(self):
+        datos_txt = dict()
+        ruta_archivo = self.ruta_guardado + '\\' + self.anno + '\\' + self.archivo
+        
+
+        archivo = ArchivoTxt(ruta_archivo)
+        contenido = archivo.leer()
+
+        contenido_div = dividir_cadena('|', contenido[0])
+        
+        if contenido_div:
+            for dato in contenido_div:
+                clave = dato.split(':')[0]
+                info  = dato.split(':')[-1]
+                
+                datos_txt[clave] = info
+
+            return datos_txt
+
+
+
+
+
+    
+
 
 
     def escribir_celdas(self, datos, hoja):
@@ -94,8 +101,10 @@ class TarjetaInformativa(ArchivoExcel):
                 
                
                
-
-        self.guardar(self.excel_g)
+        nombre = splitext(self.archivo)
+        nombre_completo = self.excel_g + '\\' + nombre[0] + '.xlsx'
+        
+        self.guardar(nombre_completo)
 
 #tarjeta = TarjetaInformativa('2321_14-05-2020_12-01.txt', 'C:\\pruebas\\2020', 'prueba.xlsx')
 #tarjeta.formatear_datos()

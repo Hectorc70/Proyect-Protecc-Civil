@@ -128,6 +128,13 @@ class RangoFechas():
         
         return meses_dias
 
+    def validar_fechas(self, fecha):
+        pass
+
+
+
+
+        
             
 
         
