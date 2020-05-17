@@ -146,7 +146,7 @@ class WidgetsAyuda(MainWindow):
 class ExportarDatos(MainWindow):
 
 	def __init__(self):
-		MainWindow.__init__(self)
+		MainWindow.__init__(self)		
 		
 		self.btn_buscar_datos.clicked.connect(self.comprobar)
 		self.btn_directorio_excel.clicked.connect(self.explorador_de_archivos)
@@ -156,7 +156,10 @@ class ExportarDatos(MainWindow):
 	def exportar_datos(self):
 		"""invoca la clase para exportar los datos en una
 		   archivo excel """
-		registros_obtenidos = self.comprobar()
+
+
+		#registros_obtenidos = self.comprobar()
+		pass
 
 
 
@@ -165,12 +168,17 @@ class ExportarDatos(MainWindow):
 
 	def comprobar(self):
 
-		if self.rbtn_individual.isChecked():			
-			registros_obtenidos = self.buscar_registro_individual()
-		else:
-			self.buscar_registro_por_rangos()
+		if self.rbtn_individual.isChecked() or self.rbtn_rangos.isChecked():
 
-		return registros_obtenidos
+			if self.rbtn_individual.isChecked():			
+				registros_obtenidos = self.buscar_registro_individual()
+		
+			if self.rbtn_rangos.isChecked():
+				self.buscar_registro_por_rangos()
+		else:
+			QMessageBox.warning(self, 'Advertencia', 'Seleccione una opcion: Individual o Rangos')
+		
+		#return registros_obtenidos
 
 		
 
@@ -178,7 +186,7 @@ class ExportarDatos(MainWindow):
 
 		
 		datos_para_busqueda = dict()
-
+		
 		folio = self.b_folio_input.text()
 		dia = self.b_fecha_dia_input.text()		
 		mes = self.b_fecha_mes_input.text()
@@ -196,27 +204,80 @@ class ExportarDatos(MainWindow):
 			elif folio != '':
 				datos_para_busqueda['folio'] = folio		
 				
-			elif fecha != '--':
-				if dia != '' and mes != '' and anno !='':
-					datos_para_busqueda['fecha'] = fecha
-				else:
-					QMessageBox.warning(self, 'Advertencia', 'Llene todos los campos de la fecha DD/MM/AAAA')
+			
+			if dia != '' and mes != '' and anno !='':
+				datos_para_busqueda['fecha'] = fecha
+				
 				
 			
 			else:
 				QMessageBox.warning(self, 'Advertencia', 'Llene los campos Correspondientes')
 
 			
-			archivo = ArchivoObtenido(datos_para_busqueda, ruta_datos)
-			registros = archivo.comprobar_tipo_busqueda()
 			
-			self.mostrar_datos(registros)
-			return registros 
+			
+			if datos_para_busqueda:
+				archivo = ArchivoObtenido(datos_para_busqueda, ruta_datos)
+				registros = archivo.comprobar_tipo_busqueda()
+				self.mostrar_datos(registros)
+		
+				return registros 
+				
+				
 
 		else:
 			QMessageBox.warning(self, 'Advertencia', 'Seleccione una ruta de Guardado para la informacion')
 		
+	
+
 		
+	
+
+
+
+		
+	def buscar_registro_por_rangos(self):
+		"""Obtiene datos para buscar registros por rango
+			de fechas"""
+
+		datos_para_busqueda = dict()
+		
+	
+		dia_ini = self.rang_fecha1_dia_input.text()
+		mes_ini = self.rang_fecha1_mes_input.text()
+		anno_ini = self.rang_fecha1_anno_input.text()
+
+		
+
+		dia_fin = self.rang_fecha2_dia_input.text()
+		mes_fin = self.rang_fecha2_mes_input.text()
+		anno_fin = self.rang_fecha2_anno_input.text()
+
+		ruta_guardar_en = self.directorio_g_input.text()
+		ruta_datos  = self.ruta_guardado_input.text()
+
+		if ruta_guardar_en != '':
+
+			if (dia_ini != '' and mes_ini != '' and anno_ini != '' and
+				dia_fin != '' and mes_fin != '' and anno_fin != '' 
+			):
+				datos_para_busqueda['rango-fechas']= {'fecha_ini':[dia_ini, mes_ini, anno_ini], 
+										'fecha_fin':[dia_fin, mes_fin, anno_fin]
+									}
+
+			else:
+				QMessageBox.warning(self, 'Advertencia', 'Llene los campos Correspondientes: DD/MM/AAAA')
+
+			#solo se ejecuta si el diccionario tiene datos
+			if datos_para_busqueda:
+				archivos  = ArchivoObtenido(datos_para_busqueda, ruta_datos)
+				registros = archivos.comprobar_tipo_busqueda()
+
+
+		else:
+			QMessageBox.warning(self, 'Advertencia', 'Seleccione una ruta de Guardado para la informacion')
+
+
 	def mostrar_datos(self, datos):		
 				
 		if datos:
@@ -237,10 +298,6 @@ class ExportarDatos(MainWindow):
 			QMessageBox.information(self, 'Aviso', 'No se encontraron registros, prueba con otro folio o fecha:DD/MM/AAAA')	
 
 
-
-		
-	def buscar_registro_por_rangos(self):
-		pass
 
 
 	
