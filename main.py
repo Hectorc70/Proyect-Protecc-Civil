@@ -26,7 +26,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def ejecutar_proceso(self):
 		
-		#self.btn_guardar.clicked.connect(self.configuracion)
+		self.btn_guardar.clicked.connect(self.explorador_de_archivos_ruta)
 	
 		#self.btn_expl_carp.clicked.connect(self.explorador_archivos)
 
@@ -85,11 +85,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		"""Carga la configuracion que esta guardada en el
 		archivo config.txt ubicado en la raiz"""
 
-		ruta = self.ruta_guardado_input.text()
-
-		
-
-		
+			
 		config = ArchivoConfig()
 		configuraciones = config.obtener_configuraciones()	
 
@@ -98,26 +94,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 			print(self.ruta_guardado_input.text())
 		else:
 			self.tabWidget.setCurrentIndex(2)			
-
-
-	def exportar_datos(self):		
 		
-		registros = self.mostrando_datos()
-		carpeta_guardado_excel = self.directorio_g_input.text()	
-
-		for registro, dato in registros.items():
-
-			nombre = dato[0]	
-			ruta_datos = dato[-1]			
-			ruta_excel = carpeta_guardado_excel + '/' + nombre + '.xlsx'
-
-			tarjeta = TarjetaInformativa(registro, ruta_datos, ruta_excel)	
-		
-			tarjeta.formatear_datos()
-
-	
-			
-			
 	
 			
 
@@ -128,19 +105,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		QMessageBox.warning(self, titulo, texto)
 		
 		 
-class WidgetsAyuda(MainWindow):
-
-	def __init__(self):
-		MainWindow.__init__(self)
-
-
-	
-
-	
-	def ventana_advertencia(self, titulo, texto ):
-		pass		
 		
+	def explorador_de_archivos_ruta(self):
+		ruta_carpeta = QFileDialog.getExistingDirectory(self, 'Elegir Ruta de Guardado de datos')
+		
+		self.ruta_guardado_input.setText(ruta_carpeta)
+		self.configuracion()
+		
+	
 
+class Formulario():
+	pass
 
 	
 class ExportarDatos(MainWindow):
@@ -164,12 +139,7 @@ class ExportarDatos(MainWindow):
 			tarjeta.formatear_datos()
 
 		QMessageBox.information(self, 'Aviso', 'Se han exportado todos los archivos en: '+ ruta_guardado_excel)
-		
 
-
-
-
-		
 
 	def comprobar(self):
 
@@ -184,7 +154,6 @@ class ExportarDatos(MainWindow):
 			QMessageBox.warning(self, 'Advertencia', 'Seleccione una opcion: Individual o Rangos')
 		
 		#return registros_obtenidos
-
 		
 
 	def buscar_registro_individual(self):
@@ -237,13 +206,7 @@ class ExportarDatos(MainWindow):
 			QMessageBox.warning(self, 'Advertencia', 'Seleccione una ruta de Guardado para la informacion')
 		
 	
-
-		
 	
-
-
-
-		
 	def buscar_registro_por_rangos(self):
 		"""Obtiene datos para buscar registros por rango
 			de fechas"""
@@ -308,10 +271,6 @@ class ExportarDatos(MainWindow):
 		else:
 			QMessageBox.information(self, 'Aviso', 'No se encontraron registros, prueba con otro folio o fecha:DD/MM/AAAA')	
 
-
-
-
-	
 	
 	def explorador_de_archivos(self):
 		ruta_carpeta = QFileDialog.getExistingDirectory(self, 'Guardado de Tarjetas')
