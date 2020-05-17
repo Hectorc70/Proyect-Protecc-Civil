@@ -7,6 +7,7 @@ from info_obtencion.ayuda.txt import ArchivoTxt
 from info_obtencion.ayuda.rutas import Rutas
 from info_obtencion.ayuda.rutas import dividir_cadena
 from info_obtencion.ayuda.rutas import unir_cadenas
+from info_obtencion.ayuda.fechas import RangoFechas
 
 
 
@@ -220,172 +221,179 @@ class ArchivoObtenido:
         return registros
 
         
-    def busqueda_rango_de_fechas(self, datos):    
-        fechas = RangoFechas()
+    def busqueda_rango_de_fechas(self, datos):  
 
-        archivos_annos= list()
-        annos_intermedios = list()
+        registros =  dict()
+        fechas = RangoFechas()   
+        
 
         fecha_ini   = datos['fecha_ini']
         fecha_final = datos['fecha_fin']
             
         dia_ini    = fecha_ini[0]
-        mes_ini    = fecha_ini[1]
+        mes_ini    = fecha_ini[1]  
         anno_ini   = int(fecha_ini[-1])
+        fecha_completa_ini = [dia_ini + '-' + mes_ini + '-' + str(anno_ini)]        
         
+        dia_final   = fecha_final[0]
+        mes_final    = fecha_final[1]
         anno_final = int(fecha_final[-1])
+        fecha_completa_final = [dia_final + '-' + mes_final + '-' + str(anno_final)]        
         ruta = Rutas()
-
+        # se ejecuta si los años son iguales
         if anno_ini == anno_final:
-            pass
-       
-        else:
+            ruta_con_fecha = self.ruta_datos + '\\' + str(anno_ini)         
+            archivos = ruta.recuperar_rutas(ruta_con_fecha, True)
+            
+            #se ejecuta si el el año y mes es el mismo
+            if mes_ini == mes_final:
+                fechas_mes = list()
+                dias_del_mes = fechas.armar_dias_restantes(dia_ini, mes_ini, dia_final=dia_final)
+                dias_completos = [dia_ini + '-' + mes_ini] + dias_del_mes
+                
+                for dia in dias_completos:
+                    fecha = dia + '-' + str(anno_ini)
+                    fechas_mes.append(fecha) 
+
+                registros = self.retornar_registros(archivos, fechas_mes)
+                
+                
+                return registros
+
+            #se ejecuta si el año es el mismo pero varios meses
+            else:
+
+                fechas_anno = list()
+                meses_restantes = list()
+               
+                
+                primer_mes       = fechas.armar_dias_restantes(dia_ini, mes_ini)
+                primer_mes_completo = [dia_ini+'-'+mes_ini] + primer_mes
+
+                ultimo_mes       = fechas.armar_dias_restantes(dia_final, mes_final, reverse=True)
+                ultimo_mes_completo = ultimo_mes  + [dia_final + '-' + mes_final]
+
+                for mes in range(int(mes_ini)+1, int(mes_final)):                
+                    mes_format = str(mes).zfill(2)             
+
+                    meses_restantes.append(mes_format)
+
+                #los meses intermedios con sus 31 dias
+                todos_los_meses = ''
+                if meses_restantes:                
+                    meses_restantes_dias = fechas.armar_meses_completos(meses_restantes[0], meses_restantes[-1])
+                
+                #la suma de todos los dias de todos los meses del año                
+                    todos_los_meses = primer_mes_completo + meses_restantes_dias + ultimo_mes_completo
+                     #Crear la fecha_completa
+                    for mes in todos_los_meses:
+                        anno_mes = mes + '-' + str(anno_ini)
+
+                        fechas_anno.append(anno_mes)
+                
+                else:
+                    todos_los_meses = primer_mes_completo + ultimo_mes_completo
+
+                    for mes in todos_los_meses:
+                        anno_mes = mes + '-' + str(anno_ini)
+
+                        fechas_anno.append(anno_mes)          
+
+                
+                registros = self.retornar_registros(archivos, fechas_anno)
+                
+                return registros
+
+
+
+               
+
+            
+
+        # se ejecuta si los años son diferentes   
+        if anno_ini != anno_final:    
+            archivos_annos= list()       
+            
         
-           anno_ini_con_meses= fechas.armar_annos_incompletos(fecha_ini)
-           anno_fin_con_meses= fechas.armar_annos_incompletos(fecha_ini)
-
-
-                
+            anno_ini_con_meses= fechas.armar_annos_incompletos(fecha_ini)
+            anno_ini_con_meses_completo = fecha_completa_ini + anno_ini_con_meses
             
-                
+            anno_fin_con_meses= fechas.armar_annos_incompletos(fecha_final, reverse=True)
+            anno_fin_con_meses_completo =  anno_fin_con_meses + fecha_completa_final
 
-
-
+            annos_intermedios =  fechas.armar_annos_completos(int(anno_ini)+1, int(anno_final)-1)
             
             
-            
-            
+            todos_annos = anno_ini_con_meses_completo + annos_intermedios + anno_fin_con_meses_completo
 
-        #recupera las rutas de todos los años solicitados
-
-        """    for anno in range(anno_ini, anno_final+1):
+            #recupera las rutas de todos los años solicitados
+            for anno in range(anno_ini, anno_final+1):
                 ruta_con_fecha = self.ruta_datos + '\\' + str(anno)         
-                archivos = ruta.recuperar_rutas(ruta_con_fecha, True)
+                archivos = ruta.recuperar_rutas(ruta_con_fecha, True)               
 
-                archivos_annos.append(archivos)"""
-        
-        #filtra solo los meses y dias solicitados
-        """for archivo in archivos_annos:
-            fecha_archivo = archivo[-1].split('_')[1]
-            dia = fecha_archivo.split('-')[0]
-            mes = fecha_archivo.split('-')[1]"""
+                archivos_annos.append(archivos)
 
-
-
-        return 'hola'
-       
-        
-    def buscar_en_mismo_año(self, datos):
-        pass
-
-
-
-
-class RangoFechas():
-    def __init__(self):
-
-        self.dias = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10',
-                        '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', 
-                        '21', '22', '23', '24', '25', '26', '27','28', '29', '30', '31'
-                    ]
-
-        self.meses = ['01', '02', '03', '04', '05', '06', '07', '08', 
-                        '09', '10', '11', '12'
-                        ]
-
-
-    def armar_annos_incompletos(self, fecha):
-        """Parametros fecha= [20,05,2020]
-            Arma un año incompleto, devuelve los dias y meses
-            que le faltan para el 31-12-2020 en este caso.(todos los mes son de 31 dias)
-            ejemplo: 21-05-2020, 22-05-2020... 31-12-2020"""
-
-        anno_con_meses_dias = list()
-        
-        dia = fecha[0]
-        mes = fecha[1]
-        anno = fecha[2]
-
-        #primer mes dias que le faltan
-
-        mes_uno_dias = self.armar_dias_restantes(dia, mes) #arma el primer mes 
-        meses_restantes_completos = self.armar_meses_completos(int(mes)+1)
-
-        todos_los_meses = mes_uno_dias + meses_restantes_completos
-
-        for mes in todos_los_meses:
-
-            fecha_con_meses = mes + '-' + anno
-
-            anno_con_meses_dias.append(fecha_con_meses)
-
-        return anno_con_meses_dias
-
-
-
-
-
-
-    def armar_annos_completos(self, anno_ini, anno_final):
-        """Parametros año inicial = '2019' y año final= '2020'
-        Arma años con formato de dd-mm-aaa
-        ejemplo: 01.01.2019, 02.01.2019...30.12.2020, 31.12.2020"""
-
-        annos_intermedios = list()
-
-        for anno in range(anno_ini, anno_final+1):
-                for mes in self.meses:
-                    for dia in self.dias:
-                        annos_intermedios.append(dia + '-'+ mes + '-' + str(anno))
-        
-
-        return annos_intermedios
-
-    def armar_dias_restantes(self, dia_ini, mes):
-        """Argumentos: dia_ini = '05', mes = '05'.(como cadenas)
-            Retorna dias restantes de un mes en formato string:
-            ejemplo, 05.05 devolveria desde '06-05' al '31-05',
-            todos los meses los toma como de 31 dias"""
-        
-        dias_restantes = list()
-        
-        for dia in range(int(dia_ini)+1, 32):
             
-            dia_str = str(dia)
+            registros = self.retornar_registros_por_fecha(archivos_annos, todos_annos)
 
-            dia_format = dia_str.zfill(2)
+            return registros
 
-            mes_dias = dia_format + '-' + mes
 
-            dias_restantes.append(mes_dias)
+        else:
+            return ' '
+        return registros
 
-        return dias_restantes
+            
 
-    def armar_meses_completos(self, mes_ini):
+
+            
+            
+    def retornar_registros_por_fecha(self, carpetas, lista_de_comparacion):
+        """Parametros: archivos(como lista debe contener
+            todas las ruta de los archivos separadas por carpeta)
+            lista_de_comparacion(como lista debe contener los datos que se
+            van a comparar con los archivos obtenidos)
+            """
+
+        registros = dict()
+        if type(carpetas) is list and len(carpetas) >1:
+            for carpeta in carpetas: 
+                for archivo in carpeta:
+                    fecha_archivo = archivo[-1].split('_')[1]               
+
+                    if fecha_archivo in lista_de_comparacion:
+                        folio = archivo[-1].split('_')[0].split('.')[0]      
+                        hora  = archivo[-1].split('_')[-1].split('.')[0] 
+                                
+                    
+                        registros[archivo[-1]] = [folio, fecha_archivo, hora]
         
-        """Arma los meses con 31 dias 
-            Parametros mes_ini= '05'
-            devolveria '01-05', '02.05'....'30.12', '31.12',
-            todos los meses son de 31 dias"""
-
         
-        meses_dias = list()
+        return registros
 
+    def retornar_registros(self, archivos, lista_de_comparacion):
 
-        for mes in range(int(mes_ini), 13):
-            for dia in self.dias:
+        registros = dict()
 
-                
-                mes_str = str(mes)
-                mes_format = mes_str.zfill(2)
-                mes_con_dias = dia + '-' + mes_format
-                meses_dias.append(mes_con_dias)
-        
-        return meses_dias
+        for archivo in archivos:
+            fecha_archivo = archivo[-1].split('_')[1]              
+
+            if fecha_archivo in lista_de_comparacion:
+                folio = archivo[-1].split('_')[0].split('.')[0]      
+                hora  = archivo[-1].split('_')[-1].split('.')[0] 
+                                
+                    
+                registros[archivo[-1]] = [folio, fecha_archivo, hora]
+
+        return registros
+
+            
 
             
 
         
+        
 
-fechas = RangoFechas()
-fechas.armar_dias_restantes('05', '05')
+
+
+

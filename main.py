@@ -174,7 +174,7 @@ class ExportarDatos(MainWindow):
 				registros_obtenidos = self.buscar_registro_individual()
 		
 			if self.rbtn_rangos.isChecked():
-				self.buscar_registro_por_rangos()
+				registros_obtenidos = self.buscar_registro_por_rangos()
 		else:
 			QMessageBox.warning(self, 'Advertencia', 'Seleccione una opcion: Individual o Rangos')
 		
@@ -213,7 +213,7 @@ class ExportarDatos(MainWindow):
 			else:
 				QMessageBox.warning(self, 'Advertencia', 'Llene los campos Correspondientes')
 
-			
+				
 			
 			
 			if datos_para_busqueda:
@@ -222,6 +222,7 @@ class ExportarDatos(MainWindow):
 				self.mostrar_datos(registros)
 		
 				return registros 
+			
 				
 				
 
@@ -272,7 +273,9 @@ class ExportarDatos(MainWindow):
 			if datos_para_busqueda:
 				archivos  = ArchivoObtenido(datos_para_busqueda, ruta_datos)
 				registros = archivos.comprobar_tipo_busqueda()
-
+				
+				
+				return registros
 
 		else:
 			QMessageBox.warning(self, 'Advertencia', 'Seleccione una ruta de Guardado para la informacion')
