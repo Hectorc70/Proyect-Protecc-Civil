@@ -36,7 +36,11 @@ MANIFEST
 #configuracion del programa
 config.txt
 *.pdf
+<<<<<<< HEAD
+prueba.xlsx
+=======
 *.xlsx
+>>>>>>> tests
 
 # Installer logs
 pip-log.txt
