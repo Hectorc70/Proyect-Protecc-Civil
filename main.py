@@ -1,11 +1,14 @@
-from PyQt5.QtWidgets import QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QMessageBox, QFileDialog, QWidget
 
 from ui import *
 
 from formulario.formulario import Registro
 from config.configurar import ArchivoConfig
+from config.configurar import ArchivoFolios
+from config.ayuda.txt import ArchivoTxt
 from info_obtencion.obtencion import ArchivoObtenido
 from info_obtencion.obtencion import TarjetaInformativa
+
 
 
 
@@ -16,8 +19,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def __init__(self, *args, **kwargs):   
 		QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
-		#self.ruta_datos = self.ruta_guardado_input.text()
-	
+		ArchivoConfig.__init__(self)
+			
 		self.setupUi(self)
 		self.ejecutar_proceso()
 		self.cargar_configuracion()
@@ -27,16 +30,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def ejecutar_proceso(self):
 		
 		self.btn_guardar.clicked.connect(self.explorador_de_archivos_ruta)
-	
-		#self.btn_expl_carp.clicked.connect(self.explorador_archivos)
-
-		pass
-
+		self.btn_enviar.clicked.connect(self.obtener_datos)
 	def obtener_datos(self):
 		"""Obtiene los datos del formulario"""
 
-		ruta = self.ruta_guardado_input.text()
+		
 
+		ruta = self.ruta_guardado_input.text()
+		
 		folio = self.folio_input.text()
 		turno = self.turno_input.text()
 		agente = self.agente_input.text()
@@ -63,6 +64,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		
 		registro = Registro(ruta, datos)
 		registro.crear_archivo()
+		QMessageBox.information(self, 'Aviso', 'Se creo el registro')
+		
+		arch_folio = ArchivoFolios(ruta)
+		arch_folio.guardar_folio(folio)
+		
+
 
 
 	def configuracion(self):
@@ -84,27 +91,36 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def cargar_configuracion(self):
 		"""Carga la configuracion que esta guardada en el
 		archivo config.txt ubicado en la raiz"""
+		
 
-			
+	
 		config = ArchivoConfig()
 		configuraciones = config.obtener_configuraciones()	
 
 		if  configuraciones != '':
 			self.ruta_guardado_input.setText(configuraciones)
 			print(self.ruta_guardado_input.text())
+
+			#establece el folio
+			ruta = self.ruta_guardado_input.text()
+			arch_folio = ArchivoFolios(ruta)
+			folio = arch_folio.cargar_folio()
+
+			if folio:
+				self.folio_input.setText(folio)
+			else:
+				pass
+			
 		else:
 			self.tabWidget.setCurrentIndex(2)			
-		
-	
-			
+				
 
 
 	def  mostrar_advertencia (self, titulo = 'Advertencia',
 							  texto = 'Debe indicar una ruta para el guardado de los datos'):
 		"""Muestra advertencias"""
 		QMessageBox.warning(self, titulo, texto)
-		
-		 
+				 
 		
 	def explorador_de_archivos_ruta(self):
 		ruta_carpeta = QFileDialog.getExistingDirectory(self, 'Elegir Ruta de Guardado de datos')
@@ -114,10 +130,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		
 	
 
-class Formulario():
-	pass
-
 	
+	
+
+
+
+
 class ExportarDatos(MainWindow):
 
 	def __init__(self):
@@ -278,8 +296,17 @@ class ExportarDatos(MainWindow):
 
 		return ruta_carpeta
 
-	
+"""class Sistema( ExportarDatos):
 
+	def __init__(self):
+		
+		ExportarDatos.__init__(self)
+		
+		self.ejecutar
+
+
+	def ejecutar(self):
+		print('Ejecutandose')"""
 
 if __name__ == "__main__":
 	app = QtWidgets.QApplication([])

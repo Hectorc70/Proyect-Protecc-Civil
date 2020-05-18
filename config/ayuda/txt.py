@@ -15,6 +15,7 @@ class ArchivoTxt:
 			self.modificar(texto)
 		else:
 			self.crear()
+			self.modificar(texto)
 		
 
 	def modificar(self, datos, salto_linea=True):
@@ -31,17 +32,19 @@ class ArchivoTxt:
 		print("leido y escrita la INFO")
 
 	def leer(self, lineas = True):
+		try:
+			if lineas:
+				archivo_r = open(self.ruta_archivo, "r")
+				contenido_txt = archivo_r.readlines()
+				archivo_r.close() 
+			else:
+				archivo_r = open(self.ruta_archivo, "r")
+				contenido_txt = archivo_r.read()
+				archivo_r.close() 
 
-		if lineas:
-			archivo_r = open(self.ruta_archivo, "r")
-			contenido_txt = archivo_r.readlines()
-			archivo_r.close() 
-		else:
-			archivo_r = open(self.ruta_archivo, "r")
-			contenido_txt = archivo_r.read()
-			archivo_r.close() 
-
-		return contenido_txt
+			return contenido_txt
+		except FileNotFoundError:
+			pass
 	
 	def crear(self):
 

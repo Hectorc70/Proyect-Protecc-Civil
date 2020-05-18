@@ -135,7 +135,7 @@ class RangoFechas():
         return meses_dias
 
     def fecha_actual(self):
-        """Retorna la fecha dia y mes actual en formato
+        """Retona la fecha dia y mes actual en formato
             DD-MM-AAAA"""
 
 
