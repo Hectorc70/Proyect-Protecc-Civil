@@ -629,8 +629,8 @@ class Ui_MainWindow(object):
         self.titulo2.setText(_translate("MainWindow", "CAPTURA DE DATOS"))
         self.subtitulo_1.setText(_translate("MainWindow", "PROTECCION CIVIL"))
         self.subtitulo_2.setText(_translate("MainWindow", "ESTATAL DE PUEBLA"))
-
 import source
+
 
 
 if __name__ == "__main__":
