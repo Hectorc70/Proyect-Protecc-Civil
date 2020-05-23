@@ -71,10 +71,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		arch_folio.guardar_folio(folio)
 		
 	def limpiar_formulario(self):
-		folio_actual= self.folio_input.text()
-		nuevo_folio = int(folio_actual) + 1
+		ruta = self.ruta_guardado_input.text()
+		arch_folio = ArchivoFolios(ruta)
+		folio = arch_folio.cargar_folio()
+
+		if folio:
+			self.folio_input.setText(folio)
+		else:
+			pass
 		
-		folio = self.folio_input.setText(str(nuevo_folio))
+		
+		
+		
 		
 		turno = self.turno_input.setText('')
 		agente = self.agente_input.setText('')

@@ -39,17 +39,18 @@ class TarjetaInformativa(ArchivoExcel):
 
         datos_registro = dict()
         datos_txt = self.obtener_datos()
-        datos_completos = {'reporto':[9,9, datos_txt['report_o']], 
-                  'id':[16,10, datos_txt['folio']],'turno':[21,9, datos_txt['turno']],
-                  'reporte':[7,17, datos_txt['reporte']], 
-                  'h-f_reporte':[11,17, datos_txt['h_report']], 
-                  'municipio':[15,17, datos_txt['region']],
-                  'col_juntaux':[19,17, datos_txt['colonia']], 
-                  'dir_paraje':[23,17, datos_txt['coord']], 
-                  'afectacion':[8,24, datos_txt['afectacion']],
-                  'acc_pc':[7,35, datos_txt['acciones']],
-                  'dependencias':[17,35, datos_txt['dependencias']],
-                  'desarrollo':[7,45, datos_txt['desarrollo']]}
+        datos_completos = {'reporto':[7,6, datos_txt['report_o']], 
+                  'id':[7,3, datos_txt['folio']],'turno':[7,4, datos_txt['turno']],
+                  'reporte':[7,9, datos_txt['reporte']], 
+                  'h-f_reporte':[7,7, datos_txt['h_report']],
+                  'terminal':[7,8, datos_txt['terminal']], 
+                  'municipio':[7,10, datos_txt['region']],
+                  'col_juntaux':[7,11, datos_txt['colonia']], 
+                  'dir_paraje':[7,12, datos_txt['coord']], 
+                  'afectacion':[13,4, datos_txt['afectacion']],
+                  'acc_pc':[13,9, datos_txt['acciones']],
+                  'dependencias':[7,13, datos_txt['dependencias']],
+                  'desarrollo':[19,4, datos_txt['desarrollo']]}
 
         datos_registro[self.archivo]= datos_completos
 
