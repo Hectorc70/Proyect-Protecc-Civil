@@ -22,6 +22,9 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(998, 679))
         MainWindow.setMaximumSize(QtCore.QSize(998, 679))
         MainWindow.setSizeIncrement(QtCore.QSize(0, 0))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/img_1/ICONO 2020.png"), QtGui.QIcon.Active, QtGui.QIcon.On)
+        MainWindow.setWindowIcon(icon)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet("background-color: rgb(255, 255, 255);")
         MainWindow.setTabShape(QtWidgets.QTabWidget.Rounded)
@@ -559,7 +562,7 @@ class Ui_MainWindow(object):
         self.logo_secund_3.setObjectName("logo_secund_3")
         self.fondo_top = QtWidgets.QLabel(self.centralwidget)
         self.fondo_top.setEnabled(False)
-        self.fondo_top.setGeometry(QtCore.QRect(-70, 0, 1121, 131))
+        self.fondo_top.setGeometry(QtCore.QRect(-80, -10, 1121, 131))
         font = QtGui.QFont()
         font.setFamily("Source Serif Pro")
         font.setPointSize(9)
@@ -629,8 +632,8 @@ class Ui_MainWindow(object):
         self.titulo2.setText(_translate("MainWindow", "CAPTURA DE DATOS"))
         self.subtitulo_1.setText(_translate("MainWindow", "PROTECCION CIVIL"))
         self.subtitulo_2.setText(_translate("MainWindow", "ESTATAL DE PUEBLA"))
-import source
 
+import source
 
 
 if __name__ == "__main__":
