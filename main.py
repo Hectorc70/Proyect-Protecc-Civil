@@ -32,6 +32,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.btn_guardar.clicked.connect(self.explorador_de_archivos_ruta)
 		self.btn_enviar.clicked.connect(self.obtener_datos)
 		self.btn_nuevo_form.clicked.connect(self.limpiar_formulario)
+		self.btn_editar.clicked.connect(self.editar_registro)
 	def obtener_datos(self):
 		"""Obtiene los datos del formulario"""
 
@@ -69,7 +70,34 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		
 		arch_folio = ArchivoFolios(ruta)
 		arch_folio.guardar_folio(folio)
+	
+	def editar_registro(self):
+		ruta  = self.ruta_guardado_input.text()
+		folio = self.folio_input.text()
+
+		registro = Registro(ruta, folio)
+		datos_registro = registro.obtener_datos_txt(folio)
 		
+		if datos_registro:
+				
+			folio = self.folio_input.setText(datos_registro['folio'])
+			turno = self.turno_input.setText(datos_registro['turno'])
+			agente = self.agente_input.setText(datos_registro['agente'])
+			report_o = self.report_o_input.setText(datos_registro['report_o'])
+			h_report = self.h_report_input.setText(datos_registro['h_report'])
+			terminal = self.terminal_input.setText(datos_registro['terminal'])
+			reporte = self.reporte_input.setText(datos_registro['agente'])
+			region = self.mun_region_input.setText(datos_registro['region'])
+			colonia = self.colonia_input.setText(datos_registro['colonia'])
+			coord = self.coord_input.setText(datos_registro['coord'])
+
+			dependencias = self.dependencias_input.setPlainText(datos_registro['dependencias'])
+			acciones     = self.acciones_input.setPlainText(datos_registro['acciones'])
+			afectacion   = self.afectacion_input.setPlainText(datos_registro['afectacion'])
+			desarrollo   = self.desarrollo_input.setPlainText(datos_registro['desarrollo'])
+
+		else:
+			QMessageBox.warning(self, 'Advertencia', '''No se encontro registro. Intente con otro folio''')	
 	def limpiar_formulario(self):
 		ruta = self.ruta_guardado_input.text()
 		arch_folio = ArchivoFolios(ruta)

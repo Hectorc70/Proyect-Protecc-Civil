@@ -3,7 +3,7 @@ from os.path import exists
 from os import makedirs
 
 from formulario.ayuda.txt import ArchivoTxt
-from formulario.ayuda.rutas import unir_cadenas
+from formulario.ayuda.rutas import Rutas, unir_cadenas, dividir_cadena
 
 
 
@@ -78,4 +78,37 @@ class Registro():
             makedirs(ruta_completa)
 
         return ruta_completa
+
+
+    def obtener_datos_txt(self, folio):
+        datos_txt = dict()
+
+        fecha = self.formar_fecha()
+        carpeta = self.ruta_datos + '\\' + fecha[1]
+        ruta = Rutas()
+        archivos = ruta.recuperar_rutas(carpeta, True)
         
+        for archivo in archivos:
+            
+            nombre = archivo[-1]
+            nombre_folio = nombre.split('_')[0]
+
+            if folio == nombre_folio:
+
+                ruta = unir_cadenas('\\', archivo)
+                archivo = ArchivoTxt(ruta)
+                contenido = archivo.leer()
+
+                contenido_div = dividir_cadena('|', contenido[0])
+        
+                if contenido_div:
+                    for dato in contenido_div:
+                        
+                        clave = dato.split(':')[0]                        
+                        info  = dato.split(':')[-1]  
+
+                                    
+                        datos_txt[clave] = info
+            
+
+        return datos_txt
