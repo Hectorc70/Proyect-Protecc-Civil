@@ -31,6 +31,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		
 		self.btn_guardar.clicked.connect(self.explorador_de_archivos_ruta)
 		self.btn_enviar.clicked.connect(self.obtener_datos)
+		self.btn_nuevo_form.clicked.connect(self.limpiar_formulario)
 	def obtener_datos(self):
 		"""Obtiene los datos del formulario"""
 
@@ -69,6 +70,36 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		arch_folio = ArchivoFolios(ruta)
 		arch_folio.guardar_folio(folio)
 		
+	def limpiar_formulario(self):
+		ruta = self.ruta_guardado_input.text()
+		arch_folio = ArchivoFolios(ruta)
+		folio = arch_folio.cargar_folio()
+
+		if folio:
+			self.folio_input.setText(folio)
+		else:
+			pass
+		
+		
+		
+		
+		
+		turno = self.turno_input.setText('')
+		agente = self.agente_input.setText('')
+		report_o = self.report_o_input.setText('')
+		h_report = self.h_report_input.setText('')
+		terminal = self.terminal_input.setText('')
+		reporte = self.reporte_input.setText('')
+		region = self.mun_region_input.setText('')
+		colonia = self.colonia_input.setText('')
+		coord = self.coord_input.setText('')
+
+		dependencias = self.dependencias_input.setPlainText('')
+		acciones     = self.acciones_input.setPlainText('')
+		afectacion   = self.afectacion_input.setPlainText('')
+		desarrollo   = self.desarrollo_input.setPlainText('')
+
+
 
 
 
