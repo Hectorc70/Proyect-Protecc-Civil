@@ -81,6 +81,9 @@ class Registro():
 
 
     def obtener_datos_txt(self, folio):
+        """Retorna los datos del archivo 
+            del folio pasado como parametro"""
+            
         datos_txt = dict()
 
         fecha = self.formar_fecha()
@@ -112,3 +115,23 @@ class Registro():
             
 
         return datos_txt
+
+    def comprobar_duplicados(self, folio):
+        """Recupera los archivos del año actual
+            y retorna bool si es que el folio ya existe"""
+        folios = list()
+        fecha = self.formar_fecha()
+        carpeta = self.ruta_datos + '\\' + fecha[1]
+        ruta = Rutas()
+        archivos = ruta.recuperar_rutas(carpeta, True)
+        
+        for archivo in archivos:
+            
+            nombre = archivo[-1]
+            nombre_folio = nombre.split('_')[0]
+            folios.append(nombre_folio)
+        
+        if folio in folios:
+            return True
+        else:
+            return False
